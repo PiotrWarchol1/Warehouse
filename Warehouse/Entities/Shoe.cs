@@ -1,6 +1,6 @@
 ﻿namespace WarehouseApp.Entities
 {
-    public class Shoe : EntityBase
+    public class Shoe : Equipment
     {
         public string? Person { get; set; }
 
