@@ -1,9 +1,33 @@
-﻿using System.ComponentModel.Design;
+﻿using Microsoft.Extensions.DependencyInjection;
+using WarehouseApp.Entities;
+using WarehouseApp.Repositores;
+using WarehouseApp1;
+using WarehouseApp1.Comunication;
+using WarehouseApp1.DataProviders;
+using WarehouseApp1.Entities;
+
+var services = new ServiceCollection();
+services.AddSingleton<IApp, App>();
+services.AddSingleton<IRepository<Equipment>, ListRepository<Equipment>>();
+services.AddSingleton<IRepository<Helmet>, ListRepository<Helmet>>();
+services.AddSingleton<IHelmetsProvider, HelmetsProvider>();
+services.AddSingleton<IUserComunication, UserComunication>();
+
+
+var servicesProvider = services.BuildServiceProvider();
+var app = servicesProvider.GetService<IApp>()!;
+app.Run();
+
+
+
+
+
+/*using System.ComponentModel.Design;
 using WarehouseApp.Data;
 using WarehouseApp.Entities;
 using WarehouseApp.Repositores;
-using WarehouseApp.Repositores.Extensions;
-
+using WarehouseApp.Repositores.Extensions;*/
+/*
 Console.WriteLine("----| Welcame to Warehause Application |----");
 Console.WriteLine("     ----------------------------------     ");
 Console.WriteLine("Warehause Application used to rent ski equipment");
@@ -106,4 +130,4 @@ static void RemoveEquipment(IRepository<Equipment> repository)
         Console.WriteLine("wrong option");
 
     }
-}
+}*/
