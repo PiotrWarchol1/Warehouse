@@ -34,7 +34,11 @@ namespace WarehouseApp1.Comunication
             Console.WriteLine("Press 2 if you want to rent equipment");
             Console.WriteLine("Press 3 if you want read the amount of equipment in the warehouse");
             Console.WriteLine("Press 4 if you want minimum price of all helmets");
-            Console.WriteLine("                                            ");
+            Console.WriteLine("Press 5 if you want by name");
+            Console.WriteLine("Press 6 if you want color red");
+            Console.WriteLine("Press 7 if you want unique helmet colors");
+            Console.WriteLine("Press q if you want quit");
+            Console.WriteLine("                        ");
 
             GenerateHelmetsData(_helmetsRepository);
 
@@ -179,8 +183,8 @@ namespace WarehouseApp1.Comunication
 
             static void GenerateHelmetsData(IRepository<Helmet> _helmetsRepository)
             {
-                var helmets1 = HelmetsProvider.GenerateSampleHelmet();
-                foreach (var helmet in helmets1)
+                var helmets = HelmetsProvider.GenerateSampleHelmet();
+                foreach (var helmet in helmets)
                 {
                     _helmetsRepository.Add(helmet);
                 }
