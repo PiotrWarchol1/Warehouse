@@ -12,7 +12,6 @@ namespace WarehouseApp1.Comunication
         private readonly IHelmetsProvider _helmetsProvider;
 
         public UserComunication(
-            IRepository<Equipment> equipmentsRepository,
             IRepository<Helmet> helmetsRepository,
             IHelmetsProvider helmetsProvider)
         {
