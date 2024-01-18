@@ -8,7 +8,6 @@ namespace WarehouseApp1.Comunication
 {
     public class UserComunication : IUserComunication
     {
-        private readonly IRepository<Equipment> _equipmentsRepository;
         private readonly IRepository<Helmet> _helmetsRepository;
         private readonly IHelmetsProvider _helmetsProvider;
 
@@ -17,7 +16,6 @@ namespace WarehouseApp1.Comunication
             IRepository<Helmet> helmetsRepository,
             IHelmetsProvider helmetsProvider)
         {
-            _equipmentsRepository = equipmentsRepository;
             _helmetsRepository = helmetsRepository;
             _helmetsProvider = helmetsProvider;
         }
@@ -42,47 +40,48 @@ namespace WarehouseApp1.Comunication
 
             GenerateHelmetsData(_helmetsRepository);
 
-            var equipmentRepository = new SqlRepository<Equipment>(new WarehouseAppDbContext());
-            equipmentRepository.ItemAdded += EquipmentRepositoryOnItemAdded;
-            equipmentRepository.ItemRemove += EquipmentRepositoryOnItemRemove;
+            var equipmentRepository = GenerateEquipmentRepository();
 
-            do
+            var quit = false;
+
+            while (quit != true)
             {
-                string input = Console.ReadLine();
-                if (input == "q")
-                    break;
+                var input = Console.ReadLine();
 
-                switch (input)
-                {
-                    case "1":
-                        AddEquipment(equipmentRepository);
-                        break;
-                    case "2":
-                        RemoveEquipment(equipmentRepository);
-                        break;
-                    case "3":
-                        WriteAllToConsole(equipmentRepository);
-                        break;
-                    case "4":
-                        GetMinimumPriceOfAllHelmets(_helmetsProvider);
-                        break;
-                    case "5":
-                        OrderByName(_helmetsProvider);
-                        break;
-                    case "6":
-                        WhereColorIsRed(_helmetsProvider);
-                        break;
-                    case "7":
-                        GetUniqueHelmetColors(_helmetsProvider);
-                        break;
+                    switch (input)
+                    {
+                        case "1":
+                            AddEquipment();
+                            break;
+                        case "2":
+                            RemoveEquipment();
+                            break;
+                        case "3":
+                            WriteAllToConsole();
+                            break;
+                        case "4":
+                            GetMinimumPriceOfAllHelmets();
+                            break;
+                        case "5":
+                            OrderByName();
+                            break;
+                        case "6":
+                            WhereColorIsRed();
+                            break;
+                        case "7":
+                            GetUniqueHelmetColors();
+                            break;
+                        case "q":
+                            quit = true;
+                            break;
                     default:
-                        Console.WriteLine("wrong option");
-                        break;
-                }
-            } while (true);
+                            Console.WriteLine("wrong option");
+                            break;
+                    }
+            }
 
 
-            static void EquipmentRepositoryOnItemAdded(object? sender, Equipment e)
+            void EquipmentRepositoryOnItemAdded(object? sender, Equipment e)
             {
                 string equipment = ($"Data: {DateTime.Now}, Equipment added => {e.Type} from {sender?.GetType().Name}");
                 Console.WriteLine(equipment);
@@ -92,7 +91,7 @@ namespace WarehouseApp1.Comunication
                 }
             }
 
-            static void EquipmentRepositoryOnItemRemove(object? sender, Equipment e)
+            void EquipmentRepositoryOnItemRemove(object? sender, Equipment e)
             {
                 string equipment = $"Date:  {DateTime.Now}, Equipment remove => {e.Type}  from {sender?.GetType().Name}";
                 Console.WriteLine(equipment);
@@ -102,41 +101,41 @@ namespace WarehouseApp1.Comunication
                 }
             }
 
-            static void AddEquipment(IRepository<Equipment> equipmentRepository)
+            void AddEquipment()
             {
                 Console.WriteLine("Please provide the name of the equipment: Ski, Snowboard");
-                bool skiStatus = false;
-                bool snowboardStatus = false;
+                bool ski = false;
+                bool snowboard = false;
                 string status = Console.ReadLine();
 
                 if (status == "Ski")
                 {
-                    skiStatus = true;
+                    ski = true;
                 }
                 else if (status == "Snowboard")
                 {
-                    snowboardStatus = false;
+                    snowboard = false;
                 }
                 equipmentRepository.Add(new Equipment { Type = Console.ReadLine() });
                 equipmentRepository.Save();
             }
 
-            static void WriteAllToConsole(IReadRepository<IEntity> repository)
+            void WriteAllToConsole()
             {
-                var _items = repository.GetAll();
+                var _items = equipmentRepository.GetAll();
                 foreach (var _item in _items)
                 {
                     Console.WriteLine(_item);
                 }
             }
 
-            static void RemoveEquipment(IRepository<Equipment> repository)
+            void RemoveEquipment()
             {
                 Console.WriteLine("Enter the number of equipment you want to delete");
                 try
                 {
-                    repository.Remove(repository.GetById(int.Parse(Console.ReadLine())));
-                    repository.Save();
+                    equipmentRepository.Remove(equipmentRepository.GetById(int.Parse(Console.ReadLine())));
+                    equipmentRepository.Save();
                 }
                 catch
                 {
@@ -145,7 +144,7 @@ namespace WarehouseApp1.Comunication
                 }
             }
 
-            static void OrderByName(IHelmetsProvider _helmetsProvider)
+            void OrderByName()
             {
                 Console.WriteLine("OrderByName");
                 foreach (var helmet in _helmetsProvider.OrderByName())
@@ -154,14 +153,14 @@ namespace WarehouseApp1.Comunication
                 }
             }
 
-            static void GetMinimumPriceOfAllHelmets(IHelmetsProvider _helmetsProvider)
+            void GetMinimumPriceOfAllHelmets()
             {
                 Console.WriteLine();
                 Console.WriteLine("GetMinimumPriceOfAllHelmets");
                 Console.WriteLine(_helmetsProvider.GetMinimumPriceOfAllHelmets());
             }
 
-            static void WhereColorIsRed(IHelmetsProvider _helmetsProvider)
+            void WhereColorIsRed()
             {
                 Console.WriteLine();
                 Console.WriteLine("WhereColorIs Red");
@@ -171,7 +170,7 @@ namespace WarehouseApp1.Comunication
                 }
             }
 
-            static void GetUniqueHelmetColors(IHelmetsProvider _helmetsProvider)
+            void GetUniqueHelmetColors()
             {
                 Console.WriteLine();
                 Console.WriteLine("GetUniqueHelmetColors");
@@ -181,7 +180,15 @@ namespace WarehouseApp1.Comunication
                 }
             }
 
-            static void GenerateHelmetsData(IRepository<Helmet> _helmetsRepository)
+            SqlRepository<Equipment> GenerateEquipmentRepository()
+            {
+                var repository = new SqlRepository<Equipment>(new WarehouseAppDbContext());
+                repository.ItemAdded += EquipmentRepositoryOnItemAdded;
+                repository.ItemRemove += EquipmentRepositoryOnItemRemove;
+                return repository;
+            }
+
+            void GenerateHelmetsData(IRepository<Helmet> _helmetsRepository)
             {
                 var helmets = HelmetsProvider.GenerateSampleHelmet();
                 foreach (var helmet in helmets)
