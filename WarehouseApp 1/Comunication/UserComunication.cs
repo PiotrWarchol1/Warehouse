@@ -8,14 +8,17 @@ namespace WarehouseApp1.Comunication
 {
     public class UserComunication : IUserComunication
     {
-        private readonly IRepository<Helmet> _helmetsRepository;
+        private IRepository<Equipment> _equipmentsRepository;
+        //private readonly IRepository<Helmet> _helmetsRepository;
         private readonly IHelmetsProvider _helmetsProvider;
 
         public UserComunication(
-            IRepository<Helmet> helmetsRepository,
+            IRepository<Equipment> equipmentsRepository,
+          // IRepository<Helmet> helmetsRepository,
             IHelmetsProvider helmetsProvider)
         {
-            _helmetsRepository = helmetsRepository;
+            _equipmentsRepository = equipmentsRepository;
+         //   _helmetsRepository = helmetsRepository;
             _helmetsProvider = helmetsProvider;
         }
         public void Comunication()
@@ -37,9 +40,11 @@ namespace WarehouseApp1.Comunication
             Console.WriteLine("Press q if you want quit");
             Console.WriteLine("                        ");
 
-            GenerateHelmetsData(_helmetsRepository);
+            GenerateHelmetsData();
 
-            var equipmentRepository = GenerateEquipmentRepository();
+            // _equipmentsRepository = new SqlRepository<Equipment>(new WarehouseAppDbContext());
+            _equipmentsRepository.ItemAdded += EquipmentRepositoryOnItemAdded;
+            _equipmentsRepository.ItemRemove += EquipmentRepositoryOnItemRemove;
 
             var quit = false;
 
@@ -64,9 +69,9 @@ namespace WarehouseApp1.Comunication
                         case "5":
                             OrderByName();
                             break;
-                        case "6":
+/*                        case "6":
                             WhereColorIsRed();
-                            break;
+                            break;*/
                         case "7":
                             GetUniqueHelmetColors();
                             break;
@@ -115,13 +120,13 @@ namespace WarehouseApp1.Comunication
                 {
                     snowboard = false;
                 }
-                equipmentRepository.Add(new Equipment { Type = Console.ReadLine() });
-                equipmentRepository.Save();
+                _equipmentsRepository.Add(new Equipment { Type = Console.ReadLine() });
+                _equipmentsRepository.Save();
             }
 
             void WriteAllToConsole()
             {
-                var _items = equipmentRepository.GetAll();
+                var _items = _equipmentsRepository.GetAll();
                 foreach (var _item in _items)
                 {
                     Console.WriteLine(_item);
@@ -133,8 +138,8 @@ namespace WarehouseApp1.Comunication
                 Console.WriteLine("Enter the number of equipment you want to delete");
                 try
                 {
-                    equipmentRepository.Remove(equipmentRepository.GetById(int.Parse(Console.ReadLine())));
-                    equipmentRepository.Save();
+                    _equipmentsRepository.Remove(_equipmentsRepository.GetById(int.Parse(Console.ReadLine())));
+                    _equipmentsRepository.Save();
                 }
                 catch
                 {
@@ -146,9 +151,9 @@ namespace WarehouseApp1.Comunication
             void OrderByName()
             {
                 Console.WriteLine("OrderByName");
-                foreach (var helmet in _helmetsProvider.OrderByName())
+                foreach (var equipment in _helmetsProvider.OrderByName())
                 {
-                    Console.WriteLine(helmet);
+                    Console.WriteLine(equipment);
                 }
             }
 
@@ -163,9 +168,9 @@ namespace WarehouseApp1.Comunication
             {
                 Console.WriteLine();
                 Console.WriteLine("WhereColorIs Red");
-                foreach (var helmet in _helmetsProvider.WhereColorIs("Red"))
+                foreach (var equipment in _helmetsProvider.WhereColorIs("Red"))
                 {
-                    Console.WriteLine(helmet);
+                    Console.WriteLine(equipment);
                 }
             }
 
@@ -173,26 +178,20 @@ namespace WarehouseApp1.Comunication
             {
                 Console.WriteLine();
                 Console.WriteLine("GetUniqueHelmetColors");
-                foreach (var helmet in _helmetsProvider.GetUniqueHelmetColors())
+                foreach (var equipment in _helmetsProvider.GetUniqueHelmetColors())
                 {
-                    Console.WriteLine(helmet);
+                    Console.WriteLine(equipment);
                 }
             }
 
-            SqlRepository<Equipment> GenerateEquipmentRepository()
-            {
-                var repository = new SqlRepository<Equipment>(new WarehouseAppDbContext());
-                repository.ItemAdded += EquipmentRepositoryOnItemAdded;
-                repository.ItemRemove += EquipmentRepositoryOnItemRemove;
-                return repository;
-            }
 
-            void GenerateHelmetsData(IRepository<Helmet> _helmetsRepository)
+
+            void GenerateHelmetsData()
             {
                 var helmets = HelmetsProvider.GenerateSampleHelmet();
                 foreach (var helmet in helmets)
                 {
-                    _helmetsRepository.Add(helmet);
+                    _equipmentsRepository.Add(helmet);
                 }
             }
         }

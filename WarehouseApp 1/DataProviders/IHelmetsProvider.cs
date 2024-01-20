@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using WarehouseApp.Entities;
 using WarehouseApp1.Entities;
 
 namespace WarehouseApp1.DataProviders
@@ -11,7 +12,7 @@ namespace WarehouseApp1.DataProviders
     {
         List<string> GetUniqueHelmetColors();
         decimal GetMinimumPriceOfAllHelmets();
-        List<Helmet> OrderByName();
-        List<Helmet> WhereColorIs(string color);
+        List<Equipment> OrderByName();
+        List<Equipment> WhereColorIs(string color);
     }
 }

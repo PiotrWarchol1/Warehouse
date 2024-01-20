@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using WarehouseApp.Entities;
 using WarehouseApp.Repositores;
 using WarehouseApp1.DataProviders.Extensions;
 using WarehouseApp1.Entities;
@@ -11,9 +12,9 @@ namespace WarehouseApp1.DataProviders
 {
     public class HelmetsProvider : IHelmetsProvider
     {
-        private readonly IRepository<Helmet> _helmetsRepository;
+        private readonly IRepository<Equipment> _helmetsRepository;
 
-        public HelmetsProvider(IRepository<Helmet> helmetsRepository)
+        public HelmetsProvider(IRepository<Equipment> helmetsRepository)
         {
             _helmetsRepository = helmetsRepository;
         }
@@ -29,16 +30,16 @@ namespace WarehouseApp1.DataProviders
             return helmets.Select(h => h.ListPrice).Min();
         }
 
-        public List<Helmet> OrderByName()
+        public List<Equipment> OrderByName()
         {
             var helmets = _helmetsRepository.GetAll();
             return helmets.OrderBy(h => h.Name).ToList();
         }
 
-        public List<Helmet> WhereColorIs(string color)
+        public List<string> WhereColorIs(string color)
         {
             var helmets = _helmetsRepository.GetAll();
-            return helmets.ByColor("Red").ToList();
+            return helmets.ByColor(color).ToList();
         }
 
         public static List<Helmet> GenerateSampleHelmet()
