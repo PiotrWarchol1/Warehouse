@@ -6,7 +6,7 @@ namespace WarehouseApp.Comunication
 {
     public class UserComunication : IUserComunication
     {
-        private IRepository<Equipment> _equipmentsRepository;
+        private readonly IRepository<Equipment> _equipmentsRepository;
         private readonly IRepository<Helmet> _helmetsRepository;
         private readonly IHelmetsProvider _helmetsProvider;
 
