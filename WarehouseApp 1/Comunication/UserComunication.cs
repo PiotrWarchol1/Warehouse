@@ -148,9 +148,9 @@ namespace WarehouseApp.Comunication
             void OrderByName()
             {
                 Console.WriteLine("OrderByName");
-                foreach (var helmet in _helmetsProvider.OrderByName())
+                foreach (var equipment in _helmetsProvider.OrderByName())
                 {
-                    Console.WriteLine(helmet);
+                    Console.WriteLine(equipment);
                 }
             }
 
@@ -165,9 +165,9 @@ namespace WarehouseApp.Comunication
             {
                 Console.WriteLine();
                 Console.WriteLine("WhereColorIs Red");
-                foreach (var helmet in _helmetsProvider.WhereColorIs("Red"))
+                foreach (var equipment in _helmetsProvider.WhereColorIs("Red"))
                 {
-                    Console.WriteLine(helmet);
+                    Console.WriteLine(equipment);
                 }
             }
 
@@ -175,18 +175,18 @@ namespace WarehouseApp.Comunication
             {
                 Console.WriteLine();
                 Console.WriteLine("GetUniqueHelmetColors");
-                foreach (var helmet in _helmetsProvider.GetUniqueHelmetColors())
+                foreach (var equipment in _helmetsProvider.GetUniqueHelmetColors())
                 {
-                    Console.WriteLine(helmet);
+                    Console.WriteLine(equipment);
                 }
             }
 
             void GenerateHelmetsData()
             {
-                var helmets = HelmetsProvider.GenerateSampleHelmet();
-                foreach (var helmet in helmets)
+                var equipments = HelmetsProvider.GenerateSampleHelmet();
+                foreach (var equipment in equipments)
                 {
-                    _helmetsRepository.Add(helmet);
+                    _helmetsRepository.Add(equipment);
                 }
             }
         }
