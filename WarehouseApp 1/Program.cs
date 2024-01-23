@@ -1,10 +1,9 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using WarehouseApp.Entities;
 using WarehouseApp.Repositores;
-using WarehouseApp1;
-using WarehouseApp1.Comunication;
-using WarehouseApp1.DataProviders;
-using WarehouseApp1.Entities;
+using WarehouseApp;
+using WarehouseApp.Comunication;
+using WarehouseApp.DataProviders;
 
 var services = new ServiceCollection();
 services.AddSingleton<IApp, App>();
@@ -17,8 +16,6 @@ services.AddSingleton<IUserComunication, UserComunication>();
 var servicesProvider = services.BuildServiceProvider();
 var app = servicesProvider.GetService<IApp>()!;
 app.Run();
-
-
 
 
 

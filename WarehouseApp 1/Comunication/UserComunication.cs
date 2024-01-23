@@ -1,24 +1,22 @@
-﻿using WarehouseApp.Data;
-using WarehouseApp.Entities;
+﻿using WarehouseApp.Entities;
 using WarehouseApp.Repositores;
-using WarehouseApp1.DataProviders;
-using WarehouseApp1.Entities;
+using WarehouseApp.DataProviders;
 
-namespace WarehouseApp1.Comunication
+namespace WarehouseApp.Comunication
 {
     public class UserComunication : IUserComunication
     {
         private IRepository<Equipment> _equipmentsRepository;
-        //private readonly IRepository<Helmet> _helmetsRepository;
+        private readonly IRepository<Helmet> _helmetsRepository;
         private readonly IHelmetsProvider _helmetsProvider;
 
         public UserComunication(
             IRepository<Equipment> equipmentsRepository,
-          // IRepository<Helmet> helmetsRepository,
+            IRepository<Helmet> helmetsRepository,
             IHelmetsProvider helmetsProvider)
         {
             _equipmentsRepository = equipmentsRepository;
-         //   _helmetsRepository = helmetsRepository;
+            _helmetsRepository = helmetsRepository;
             _helmetsProvider = helmetsProvider;
         }
         public void Comunication()
@@ -42,7 +40,6 @@ namespace WarehouseApp1.Comunication
 
             GenerateHelmetsData();
 
-            // _equipmentsRepository = new SqlRepository<Equipment>(new WarehouseAppDbContext());
             _equipmentsRepository.ItemAdded += EquipmentRepositoryOnItemAdded;
             _equipmentsRepository.ItemRemove += EquipmentRepositoryOnItemRemove;
 
@@ -69,9 +66,9 @@ namespace WarehouseApp1.Comunication
                         case "5":
                             OrderByName();
                             break;
-/*                        case "6":
+                        case "6":
                             WhereColorIsRed();
-                            break;*/
+                            break;
                         case "7":
                             GetUniqueHelmetColors();
                             break;
@@ -151,9 +148,9 @@ namespace WarehouseApp1.Comunication
             void OrderByName()
             {
                 Console.WriteLine("OrderByName");
-                foreach (var equipment in _helmetsProvider.OrderByName())
+                foreach (var helmet in _helmetsProvider.OrderByName())
                 {
-                    Console.WriteLine(equipment);
+                    Console.WriteLine(helmet);
                 }
             }
 
@@ -168,9 +165,9 @@ namespace WarehouseApp1.Comunication
             {
                 Console.WriteLine();
                 Console.WriteLine("WhereColorIs Red");
-                foreach (var equipment in _helmetsProvider.WhereColorIs("Red"))
+                foreach (var helmet in _helmetsProvider.WhereColorIs("Red"))
                 {
-                    Console.WriteLine(equipment);
+                    Console.WriteLine(helmet);
                 }
             }
 
@@ -178,20 +175,18 @@ namespace WarehouseApp1.Comunication
             {
                 Console.WriteLine();
                 Console.WriteLine("GetUniqueHelmetColors");
-                foreach (var equipment in _helmetsProvider.GetUniqueHelmetColors())
+                foreach (var helmet in _helmetsProvider.GetUniqueHelmetColors())
                 {
-                    Console.WriteLine(equipment);
+                    Console.WriteLine(helmet);
                 }
             }
-
-
 
             void GenerateHelmetsData()
             {
                 var helmets = HelmetsProvider.GenerateSampleHelmet();
                 foreach (var helmet in helmets)
                 {
-                    _equipmentsRepository.Add(helmet);
+                    _helmetsRepository.Add(helmet);
                 }
             }
         }

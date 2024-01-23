@@ -1,16 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore.Diagnostics;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using WarehouseApp.Entities;
+﻿using WarehouseApp.Entities;
 using WarehouseApp.Repositores;
-using WarehouseApp1.Comunication;
-using WarehouseApp1.DataProviders;
-using WarehouseApp1.Entities;
+using WarehouseApp.Comunication;
+using WarehouseApp.DataProviders;
 
-namespace WarehouseApp1
+namespace WarehouseApp
 {
     public class App : IApp
     {
