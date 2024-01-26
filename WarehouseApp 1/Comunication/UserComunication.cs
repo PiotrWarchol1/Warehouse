@@ -1,47 +1,36 @@
 ﻿using WarehouseApp.Entities;
 using WarehouseApp.Repositores;
 using WarehouseApp.DataProviders;
+using WarehouseApp.Data;
 
 namespace WarehouseApp.Comunication
 {
     public class UserComunication : IUserComunication
     {
-        private readonly IRepository<Equipment> _equipmentsRepository;
-        private readonly IRepository<Helmet> _helmetsRepository;
-        private readonly IHelmetsProvider _helmetsProvider;
+        private IRepository<Equipment> _equipmentsRepository;
+        private IRepository<Helmet> _helmetsRepository;
+        private WarehouseAppDbContext _warehouseAppDbContext;
+        private IHelmetsProvider _helmetsProvider;
 
         public UserComunication(
             IRepository<Equipment> equipmentsRepository,
             IRepository<Helmet> helmetsRepository,
+            WarehouseAppDbContext warehouseAppDbContext,
             IHelmetsProvider helmetsProvider)
         {
             _equipmentsRepository = equipmentsRepository;
             _helmetsRepository = helmetsRepository;
+            _warehouseAppDbContext = warehouseAppDbContext;
             _helmetsProvider = helmetsProvider;
         }
         public void Comunication()
         {
-
-            Console.WriteLine("----| Welcame to Warehause Application |----");
-            Console.WriteLine("     ----------------------------------     ");
-            Console.WriteLine("Warehause Application used to rent ski equipment");
-            Console.WriteLine("------------------------------------------------");
-            Console.WriteLine("Select what you want to do below by selecting the appropriate action number   ");
-            Console.WriteLine("                                            ");
-            Console.WriteLine("Press 1 if you want to return your equipment");
-            Console.WriteLine("Press 2 if you want to rent equipment");
-            Console.WriteLine("Press 3 if you want read the amount of equipment in the warehouse");
-            Console.WriteLine("Press 4 if you want minimum price of all helmets");
-            Console.WriteLine("Press 5 if you want by name");
-            Console.WriteLine("Press 6 if you want color red");
-            Console.WriteLine("Press 7 if you want unique helmet colors");
-            Console.WriteLine("Press q if you want quit");
-            Console.WriteLine("                        ");
-
-            GenerateHelmetsData();
-
+            _equipmentsRepository = new SqlRepository<Equipment>(_warehouseAppDbContext);
+         
+            FillDbWithSampleHelmets();
             _equipmentsRepository.ItemAdded += EquipmentRepositoryOnItemAdded;
             _equipmentsRepository.ItemRemove += EquipmentRepositoryOnItemRemove;
+            showMenu();
 
             var quit = false;
 
@@ -81,7 +70,6 @@ namespace WarehouseApp.Comunication
                     }
             }
 
-
             void EquipmentRepositoryOnItemAdded(object? sender, Equipment e)
             {
                 string equipment = ($"Data: {DateTime.Now}, Equipment added => {e.Type} from {sender?.GetType().Name}");
@@ -109,15 +97,7 @@ namespace WarehouseApp.Comunication
                 bool snowboard = false;
                 string status = Console.ReadLine();
 
-                if (status == "Ski")
-                {
-                    ski = true;
-                }
-                else if (status == "Snowboard")
-                {
-                    snowboard = false;
-                }
-                _equipmentsRepository.Add(new Equipment { Type = Console.ReadLine() });
+                _equipmentsRepository.Add(new Equipment { Type = status });
                 _equipmentsRepository.Save();
             }
 
@@ -180,7 +160,33 @@ namespace WarehouseApp.Comunication
                     Console.WriteLine(equipment);
                 }
             }
+            void showMenu()
+            {
 
+                Console.WriteLine("----| Welcame to Warehause Application |----");
+                Console.WriteLine("     ----------------------------------     ");
+                Console.WriteLine("Warehause Application used to rent ski equipment");
+                Console.WriteLine("------------------------------------------------");
+                Console.WriteLine("Select what you want to do below by selecting the appropriate action number   ");
+                Console.WriteLine("                                            ");
+                Console.WriteLine("Press 1 if you want to return your equipment");
+                Console.WriteLine("Press 2 if you want to rent equipment");
+                Console.WriteLine("Press 3 if you want read the amount of equipment in the warehouse");
+                Console.WriteLine("Press 4 if you want minimum price of all helmets");
+                Console.WriteLine("Press 5 if you want by name");
+                Console.WriteLine("Press 6 if you want color red");
+                Console.WriteLine("Press 7 if you want unique helmet colors");
+                Console.WriteLine("Press q if you want quit");
+                Console.WriteLine("                        ");
+                GenerateHelmetsData();
+            }
+            void FillDbWithSampleHelmets()
+            {
+                foreach (var equipment in _equipmentsRepository.GetAll())
+                {
+                    _equipmentsRepository.Add(equipment);
+                }
+            }
             void GenerateHelmetsData()
             {
                 var equipments = HelmetsProvider.GenerateSampleHelmet();

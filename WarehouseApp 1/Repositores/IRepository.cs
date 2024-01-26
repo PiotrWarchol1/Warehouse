@@ -7,6 +7,5 @@ namespace WarehouseApp.Repositores
     {
         public event EventHandler<T>? ItemAdded;
         public event EventHandler<T>? ItemRemove;
-
     }
 }

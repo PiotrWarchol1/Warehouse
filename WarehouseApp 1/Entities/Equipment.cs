@@ -16,7 +16,7 @@ namespace WarehouseApp.Entities
         {
             StringBuilder sb = new(1024);
 
-            sb.AppendLine($"{Name}  ID: {Id}");
+            sb.AppendLine($" Name: {Name}  ID: {Id}");
             sb.AppendLine($" Color: {Color}  Type: {(Type ?? "n/a")}");
             sb.AppendLine($" Price: {ListPrice:c}");
             if (NameLength.HasValue)

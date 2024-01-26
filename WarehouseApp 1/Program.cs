@@ -4,6 +4,8 @@ using WarehouseApp.Repositores;
 using WarehouseApp;
 using WarehouseApp.Comunication;
 using WarehouseApp.DataProviders;
+using Microsoft.EntityFrameworkCore;
+using WarehouseApp.Data;
 
 var services = new ServiceCollection();
 services.AddSingleton<IApp, App>();
@@ -11,7 +13,8 @@ services.AddSingleton<IRepository<Equipment>, ListRepository<Equipment>>();
 services.AddSingleton<IRepository<Helmet>, ListRepository<Helmet>>();
 services.AddSingleton<IHelmetsProvider, HelmetsProvider>();
 services.AddSingleton<IUserComunication, UserComunication>();
-
+services.AddSingleton<SqlRepository<Equipment>>();
+services.AddDbContext<DbContext, WarehouseAppDbContext>();
 
 var servicesProvider = services.BuildServiceProvider();
 var app = servicesProvider.GetService<IApp>()!;
