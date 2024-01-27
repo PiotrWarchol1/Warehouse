@@ -10,10 +10,11 @@ using WarehouseApp.Data;
 var services = new ServiceCollection();
 services.AddSingleton<IApp, App>();
 services.AddSingleton<IRepository<Equipment>, ListRepository<Equipment>>();
-services.AddSingleton<IRepository<Helmet>, ListRepository<Helmet>>();
 services.AddSingleton<IHelmetsProvider, HelmetsProvider>();
+services.AddSingleton<IRepository<Helmet>, ListRepository<Helmet>>();
 services.AddSingleton<IUserComunication, UserComunication>();
 services.AddSingleton<SqlRepository<Equipment>>();
+services.AddSingleton<SqlRepository<Helmet>>();
 services.AddDbContext<DbContext, WarehouseAppDbContext>();
 
 var servicesProvider = services.BuildServiceProvider();

@@ -5,12 +5,24 @@ namespace WarehouseApp.DataProviders
 {
     public class HelmetsProvider : IHelmetsProvider
     {
-        private readonly IRepository<Helmet> _helmetsRepository;
+        private IRepository<Helmet> _helmetsRepository;
 
         public HelmetsProvider(IRepository<Helmet> helmetsRepository)
         {
+
             _helmetsRepository = helmetsRepository;
+            foreach (var item in GenerateSampleHelmet())
+            {
+                _helmetsRepository.Add(item);
+            }
         }
+
+
+        public IRepository<Helmet> GetHelmetRepo()
+        {
+            return _helmetsRepository; 
+        }
+
         public List<string> GetUniqueHelmetColors()
         {
             var helmets = _helmetsRepository.GetAll();
@@ -35,7 +47,7 @@ namespace WarehouseApp.DataProviders
             return equipments.Where(x => x.Color == "Red").ToList();
         }
 
-        public static List<Helmet> GenerateSampleHelmet()
+        public List<Helmet> GenerateSampleHelmet()
         {
             return new List<Helmet>
             {

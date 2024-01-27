@@ -25,12 +25,27 @@ namespace WarehouseApp.Comunication
         }
         public void Comunication()
         {
+            _helmetsRepository = new SqlRepository<Helmet>(_warehouseAppDbContext);
+
             _equipmentsRepository = new SqlRepository<Equipment>(_warehouseAppDbContext);
          
-            FillDbWithSampleHelmets();
+
+   
+            var helmets = _helmetsProvider.GetHelmetRepo().GetAll();
+            foreach (var item in helmets)
+            {
+             _helmetsRepository.Add(item);
+             _helmetsRepository.ItemAdded += EquipmentRepositoryOnItemAdded;
+             _helmetsRepository.ItemRemove += EquipmentRepositoryOnItemRemove;
+             _equipmentsRepository.Remove(item);
+            }
+            
             _equipmentsRepository.ItemAdded += EquipmentRepositoryOnItemAdded;
             _equipmentsRepository.ItemRemove += EquipmentRepositoryOnItemRemove;
+            _equipmentsRepository.Save();
             showMenu();
+
+
 
             var quit = false;
 
@@ -103,10 +118,10 @@ namespace WarehouseApp.Comunication
 
             void WriteAllToConsole()
             {
-                var _items = _equipmentsRepository.GetAll();
-                foreach (var _item in _items)
+                var items = _equipmentsRepository.GetAll();
+                foreach (var item in items)
                 {
-                    Console.WriteLine(_item);
+                    Console.WriteLine(item);
                 }
             }
 
@@ -178,23 +193,9 @@ namespace WarehouseApp.Comunication
                 Console.WriteLine("Press 7 if you want unique helmet colors");
                 Console.WriteLine("Press q if you want quit");
                 Console.WriteLine("                        ");
-                GenerateHelmetsData();
+
             }
-            void FillDbWithSampleHelmets()
-            {
-                foreach (var equipment in _equipmentsRepository.GetAll())
-                {
-                    _equipmentsRepository.Add(equipment);
-                }
-            }
-            void GenerateHelmetsData()
-            {
-                var equipments = HelmetsProvider.GenerateSampleHelmet();
-                foreach (var equipment in equipments)
-                {
-                    _helmetsRepository.Add(equipment);
-                }
-            }
+   
         }
     }
 

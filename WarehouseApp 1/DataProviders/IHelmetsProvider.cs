@@ -1,4 +1,5 @@
 ﻿using WarehouseApp.Entities;
+using WarehouseApp.Repositores;
 
 namespace WarehouseApp.DataProviders
 {
@@ -8,5 +9,7 @@ namespace WarehouseApp.DataProviders
         decimal GetMinimumPriceOfAllHelmets();
         List<Helmet> OrderByName();
         List<Helmet> WhereColorIs(string color);
+        List<Helmet> GenerateSampleHelmet();
+        IRepository<Helmet> GetHelmetRepo();
     }
 }
