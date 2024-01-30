@@ -8,6 +8,8 @@ namespace WarehouseApp.Repositores
         private readonly DbSet<T> _dbSet;
         private readonly DbContext _dbContext;
 
+        public event EventHandler<T>? ItemAdded;
+        public event EventHandler<T>? ItemRemove;
         public SqlRepository(DbContext dbContext)
         {
             _dbContext = dbContext;
@@ -15,8 +17,7 @@ namespace WarehouseApp.Repositores
 
         }
 
-        public event EventHandler<T>? ItemAdded;
-        public event EventHandler<T>? ItemRemove;
+
         public IEnumerable<T> GetAll()
         {
             return _dbSet.ToList();

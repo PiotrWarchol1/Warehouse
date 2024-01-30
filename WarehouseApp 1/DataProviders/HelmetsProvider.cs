@@ -1,26 +1,22 @@
 ﻿using WarehouseApp.Repositores;
 using WarehouseApp.Entities;
+using WarehouseApp.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace WarehouseApp.DataProviders
 {
     public class HelmetsProvider : IHelmetsProvider
     {
-        private IRepository<Helmet> _helmetsRepository;
+        private SqlRepository<Helmet> _helmetsRepository;
 
-        public HelmetsProvider(IRepository<Helmet> helmetsRepository)
+        public HelmetsProvider(SqlRepository<Helmet> helmetsRepository, DbContext warehouseAppDbContext)
         {
-
+            _helmetsRepository = new SqlRepository<Helmet>(warehouseAppDbContext);
             _helmetsRepository = helmetsRepository;
             foreach (var item in GenerateSampleHelmet())
             {
                 _helmetsRepository.Add(item);
             }
-        }
-
-
-        public IRepository<Helmet> GetHelmetRepo()
-        {
-            return _helmetsRepository; 
         }
 
         public List<string> GetUniqueHelmetColors()

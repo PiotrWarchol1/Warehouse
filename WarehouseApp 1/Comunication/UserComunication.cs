@@ -7,45 +7,30 @@ namespace WarehouseApp.Comunication
 {
     public class UserComunication : IUserComunication
     {
-        private IRepository<Equipment> _equipmentsRepository;
-        private IRepository<Helmet> _helmetsRepository;
+        private SqlRepository<Ski> _skiRepository;
+        private SqlRepository<Helmet> _helmetsRepository;
         private WarehouseAppDbContext _warehouseAppDbContext;
         private IHelmetsProvider _helmetsProvider;
 
         public UserComunication(
-            IRepository<Equipment> equipmentsRepository,
-            IRepository<Helmet> helmetsRepository,
+            SqlRepository<Ski> skiRepository,
+            SqlRepository<Helmet> helmetsRepository,
             WarehouseAppDbContext warehouseAppDbContext,
             IHelmetsProvider helmetsProvider)
         {
-            _equipmentsRepository = equipmentsRepository;
+            _skiRepository = skiRepository;
             _helmetsRepository = helmetsRepository;
             _warehouseAppDbContext = warehouseAppDbContext;
             _helmetsProvider = helmetsProvider;
         }
         public void Comunication()
         {
+            _skiRepository = new SqlRepository<Ski>(_warehouseAppDbContext);
             _helmetsRepository = new SqlRepository<Helmet>(_warehouseAppDbContext);
 
-            _equipmentsRepository = new SqlRepository<Equipment>(_warehouseAppDbContext);
-         
+            ActivateEventListeners();
 
-   
-            var helmets = _helmetsProvider.GetHelmetRepo().GetAll();
-            foreach (var item in helmets)
-            {
-             _helmetsRepository.Add(item);
-             _helmetsRepository.ItemAdded += EquipmentRepositoryOnItemAdded;
-             _helmetsRepository.ItemRemove += EquipmentRepositoryOnItemRemove;
-             _equipmentsRepository.Remove(item);
-            }
-            
-            _equipmentsRepository.ItemAdded += EquipmentRepositoryOnItemAdded;
-            _equipmentsRepository.ItemRemove += EquipmentRepositoryOnItemRemove;
-            _equipmentsRepository.Save();
-            showMenu();
-
-
+            ShowMenu();
 
             var quit = false;
 
@@ -107,21 +92,39 @@ namespace WarehouseApp.Comunication
 
             void AddEquipment()
             {
-                Console.WriteLine("Please provide the name of the equipment: Ski, Snowboard");
-                bool ski = false;
-                bool snowboard = false;
-                string status = Console.ReadLine();
-
-                _equipmentsRepository.Add(new Equipment { Type = status });
-                _equipmentsRepository.Save();
+                Console.WriteLine("Please provide the name of the equipment: Ski, Helmet");
+                var item = Console.ReadLine();
+                if (item.ToLower().Contains("ski"))
+                {
+                    var ski = new Ski
+                    {
+                        Type = item,
+                    };
+                    _skiRepository.Add(ski);
+                    _skiRepository.Save();
+                }
+                else if (item.ToLower().Contains("helmet"))
+                {
+                    var helmet = new Helmet()
+                    {
+                        Type = item,
+                    };
+                    _helmetsRepository.Add(helmet);
+                    _helmetsRepository.Save();
+                }
             }
 
             void WriteAllToConsole()
             {
-                var items = _equipmentsRepository.GetAll();
+                var items = _skiRepository.GetAll();
                 foreach (var item in items)
                 {
                     Console.WriteLine(item);
+                }
+                var items1 = _helmetsRepository.GetAll();
+                foreach (var item1 in items1)
+                {
+                    Console.WriteLine(item1);
                 }
             }
 
@@ -130,8 +133,19 @@ namespace WarehouseApp.Comunication
                 Console.WriteLine("Enter the number of equipment you want to delete");
                 try
                 {
-                    _equipmentsRepository.Remove(_equipmentsRepository.GetById(int.Parse(Console.ReadLine())));
-                    _equipmentsRepository.Save();
+                    _skiRepository.Remove(_skiRepository.GetById(int.Parse(Console.ReadLine())));
+                    _skiRepository.Save();
+                }
+                catch
+                {
+                    Console.WriteLine("wrong option");
+
+                }
+                Console.WriteLine("Enter the number of equipment you want to delete");
+                try
+                {
+                    _helmetsRepository.Remove(_helmetsRepository.GetById(int.Parse(Console.ReadLine())));
+                    _helmetsRepository.Save();
                 }
                 catch
                 {
@@ -175,7 +189,7 @@ namespace WarehouseApp.Comunication
                     Console.WriteLine(equipment);
                 }
             }
-            void showMenu()
+            void ShowMenu()
             {
 
                 Console.WriteLine("----| Welcame to Warehause Application |----");
@@ -195,7 +209,17 @@ namespace WarehouseApp.Comunication
                 Console.WriteLine("                        ");
 
             }
-   
+            
+            void ActivateEventListeners()
+            {
+                _helmetsRepository.ItemAdded += EquipmentRepositoryOnItemAdded;
+                _helmetsRepository.ItemRemove += EquipmentRepositoryOnItemRemove;
+
+                _skiRepository.ItemAdded += EquipmentRepositoryOnItemAdded;
+                _skiRepository.ItemRemove += EquipmentRepositoryOnItemRemove;
+                _skiRepository.Save();
+
+            }
         }
     }
 
