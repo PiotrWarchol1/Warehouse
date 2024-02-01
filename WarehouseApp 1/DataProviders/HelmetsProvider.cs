@@ -1,6 +1,5 @@
 ﻿using WarehouseApp.Repositores;
 using WarehouseApp.Entities;
-using WarehouseApp.Data;
 using Microsoft.EntityFrameworkCore;
 
 namespace WarehouseApp.DataProviders

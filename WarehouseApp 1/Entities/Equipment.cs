@@ -6,7 +6,6 @@ namespace WarehouseApp.Entities
     {
 
         public string? Name { get; set; }
-        public string? Person { get; set; }
         public string? Color { get; set; }
         public string? Type { get; set; }
         public int? NameLength { get; set; }
