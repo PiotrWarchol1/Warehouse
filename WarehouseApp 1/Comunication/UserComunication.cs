@@ -98,7 +98,7 @@ namespace WarehouseApp.Comunication
                 {
                     var ski = new Ski
                     {
-                        Type = item,
+                        Type = item, Name = item, Color = "black", ListPrice = 1100 
                     };
                     _skiRepository.Add(ski);
                     _skiRepository.Save();
@@ -107,7 +107,7 @@ namespace WarehouseApp.Comunication
                 {
                     var helmet = new Helmet()
                     {
-                        Type = item,
+                        Type = item, Name = item, Color = "Red", ListPrice = 1200
                     };
                     _helmetsRepository.Add(helmet);
                     _helmetsRepository.Save();

@@ -12,10 +12,6 @@ namespace WarehouseApp.DataProviders
         {
             _helmetsRepository = new SqlRepository<Helmet>(warehouseAppDbContext);
             _helmetsRepository = helmetsRepository;
-            foreach (var item in GenerateSampleHelmet())
-            {
-                _helmetsRepository.Add(item);
-            }
         }
 
         public List<string> GetUniqueHelmetColors()
@@ -27,6 +23,7 @@ namespace WarehouseApp.DataProviders
          public decimal GetMinimumPriceOfAllHelmets()
         {
             var helmets = _helmetsRepository.GetAll();
+            
             return helmets.Select(h => h.ListPrice).Min();
         }
 
