@@ -12,8 +12,11 @@ namespace WarehouseApp.DataProviders
         {
             _helmetsRepository = new SqlRepository<Helmet>(warehouseAppDbContext);
             _helmetsRepository = helmetsRepository;
+            foreach (var item in GenerateSampleHelmet())
+            {
+                _helmetsRepository.Add(item);
+            } 
         }
-
         public List<string> GetUniqueHelmetColors()
         {
             var helmets = _helmetsRepository.GetAll();

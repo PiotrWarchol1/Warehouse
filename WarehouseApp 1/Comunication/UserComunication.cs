@@ -122,9 +122,9 @@ namespace WarehouseApp.Comunication
                     Console.WriteLine(item);
                 }
                 var items1 = _helmetsRepository.GetAll();
-                foreach (var item1 in items1)
+                foreach (var item in items)
                 {
-                    Console.WriteLine(item1);
+                    Console.WriteLine(item);
                 }
             }
 
