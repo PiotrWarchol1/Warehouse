@@ -2,7 +2,7 @@
 using WarehouseApp.Entities;
 
 namespace WarehouseApp.Data
-{
+{ 
     public class WarehouseAppDbContext : DbContext
     { 
         public DbSet<Helmet> Helmets => Set<Helmet>();

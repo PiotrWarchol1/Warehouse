@@ -116,15 +116,15 @@ namespace WarehouseApp.Comunication
 
             void WriteAllToConsole()
             {
-                var items = _skiRepository.GetAll();
-                foreach (var item in items)
+                Show("SKIES", _skiRepository);
+                Show("\nHELMET", _helmetsRepository);
+            }
+            void Show(string equipmentName, IReadRepository<Equipment> from)
+            {
+                Console.WriteLine(equipmentName + ":");
+                foreach (var equipment in from.GetAll())
                 {
-                    Console.WriteLine(item);
-                }
-                var items1 = _helmetsRepository.GetAll();
-                foreach (var item in items)
-                {
-                    Console.WriteLine(item);
+                    Console.WriteLine(equipment);
                 }
             }
 
