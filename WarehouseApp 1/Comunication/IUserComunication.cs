@@ -2,6 +2,6 @@
 {
     public interface IUserComunication
     {
-        void Comunication();
+      void Comunication();
     }
 }
