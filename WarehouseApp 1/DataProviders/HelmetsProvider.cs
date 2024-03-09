@@ -6,39 +6,38 @@ namespace WarehouseApp.DataProviders
 {
     public class HelmetsProvider : IHelmetsProvider
     {
-        private SqlRepository<Helmet> _helmetsRepository;
+        private readonly IRepository<Helmet> _helmetRepository;
 
-        public HelmetsProvider(SqlRepository<Helmet> helmetsRepository, DbContext warehouseAppDbContext)
+        public HelmetsProvider(IRepository<Helmet> helmetRepository)
         {
-            _helmetsRepository = new SqlRepository<Helmet>(warehouseAppDbContext);
-            _helmetsRepository = helmetsRepository;
+            _helmetRepository = helmetRepository;
             foreach (var item in GenerateSampleHelmet())
             {
-                _helmetsRepository.Add(item);
-            } 
+                _helmetRepository.Add(item);
+            }
         }
         public List<string> GetUniqueHelmetColors()
         {
-            var helmets = _helmetsRepository.GetAll();
+            var helmets = _helmetRepository.GetAll();
             var colors = helmets.Select(h => h.Color).Distinct().ToList();
             return colors;
         }
-         public decimal GetMinimumPriceOfAllHelmets()
+        public decimal GetMinimumPriceOfAllHelmets()
         {
-            var helmets = _helmetsRepository.GetAll();
-            
+            var helmets = _helmetRepository.GetAll();
+
             return helmets.Select(h => h.ListPrice).Min();
         }
 
         public List<Helmet> OrderByName()
         {
-            var helmets = _helmetsRepository.GetAll();
+            var helmets = _helmetRepository.GetAll();
             return helmets.OrderBy(h => h.Name).ToList();
         }
 
         public List<Helmet> WhereColorIs(string color)
         {
-            var equipments = _helmetsRepository.GetAll();
+            var equipments = _helmetRepository.GetAll();
             return equipments.Where(x => x.Color == "Red").ToList();
         }
 
